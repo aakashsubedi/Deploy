@@ -1,0 +1,1248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AFFAir</title>
+    <meta name="description" content="AFFAir is a modern dating platform where meaningful connections happen. Join today and find your perfect match!" />
+    <meta name="author" content="AFFAir" />
+
+    <meta property="og:title" content="AFFAir - Find Your Perfect Match" />
+    <meta property="og:description" content="AFFAir is a modern dating platform where meaningful connections happen. Join today and find your perfect match!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-purple: #9b87f5;
+        --secondary-purple: #7E69AB;
+        --light-purple: #D6BCFA;
+        --affair-pink: #FFDEE2;
+        --affair-peach: #FDE1D3;
+        --affair-red: #ea384c;
+        --dark-text: #333;
+        --light-text: #fff;
+        --medium-text: #666;
+        --gray-text: #888;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --border-radius: 10px;
+        --section-padding: 5rem 1rem;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-text);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.9rem 2rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-purple);
+        color: var(--light-text);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--secondary-purple);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: var(--light-text);
+        color: var(--primary-purple);
+        border: 1px solid var(--primary-purple);
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(155, 135, 245, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        color: var(--light-text);
+        border: 1px solid var(--light-text);
+      }
+
+      .btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* Animation keyframes */
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+
+      @keyframes pulse-light {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+      }
+
+      @keyframes heartbeat {
+        from {
+          transform: scale(1);
+          transform-origin: center center;
+          animation-timing-function: ease-out;
+        }
+        10% {
+          transform: scale(0.91);
+          animation-timing-function: ease-in;
+        }
+        17% {
+          transform: scale(0.98);
+          animation-timing-function: ease-out;
+        }
+        33% {
+          transform: scale(0.87);
+          animation-timing-function: ease-in;
+        }
+        45% {
+          transform: scale(1);
+          animation-timing-function: ease-out;
+        }
+      }
+
+      @keyframes slide-up {
+        0% { transform: translateY(20px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+
+      /* Navbar styles */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1rem 0;
+        transition: all 0.3s ease;
+      }
+
+      .navbar-scrolled {
+        background-color: var(--light-text);
+        box-shadow: var(--box-shadow);
+        padding: 0.5rem 0;
+      }
+
+      .navbar-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--primary-purple);
+      }
+
+      .logo span {
+        color: var(--affair-red);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-purple);
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--primary-purple);
+      }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--light-text);
+        z-index: 2000;
+        padding: 2rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .mobile-menu-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .mobile-menu .nav-link {
+        font-size: 1.5rem;
+      }
+
+      /* Hero section styles */
+      .hero {
+        height: 100vh;
+        min-height: 700px;
+        padding-top: 100px; /* Navbar height */
+        display: flex;
+        align-items: center;
+        background: linear-gradient(90deg, var(--affair-pink) 0%, var(--affair-peach) 100%);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-text {
+        flex: 1;
+      }
+
+      .hero-title {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark-text);
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--medium-text);
+        max-width: 500px;
+      }
+
+      .hero-btns {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero-stats {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .hero-stat {
+        text-align: center;
+      }
+
+      .hero-stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-purple);
+      }
+
+      .hero-stat-text {
+        font-size: 0.9rem;
+        color: var(--medium-text);
+      }
+
+      .hero-image {
+        flex: 1;
+        position: relative;
+      }
+
+      .hero-img {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: var(--box-shadow);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .hero-shape-1 {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background-color: var(--primary-purple);
+        opacity: 0.1;
+        border-radius: 50%;
+        z-index: 1;
+      }
+
+      .hero-shape-2 {
+        position: absolute;
+        bottom: -100px;
+        left: -100px;
+        width: 300px;
+        height: 300px;
+        background-color: var(--light-purple);
+        opacity: 0.2;
+        border-radius: 50%;
+        z-index: 1;
+      }
+
+      /* Features section styles */
+      .features {
+        padding: var(--section-padding);
+        background-color: var(--light-text);
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark-text);
+      }
+
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+        color: var(--medium-text);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .feature-card {
+        background-color: var(--light-text);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--box-shadow);
+        transition: transform 0.3s ease;
+        text-align: center;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        background-color: var(--affair-pink);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-text {
+        color: var(--medium-text);
+      }
+
+      /* How it works section styles */
+      .how-it-works {
+        padding: var(--section-padding);
+        background-color: rgba(214, 188, 250, 0.1);
+      }
+
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        margin-top: 3rem;
+      }
+
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+      }
+
+      .step-reverse {
+        flex-direction: row-reverse;
+      }
+
+      .step-content {
+        flex: 1;
+      }
+
+      .step-number {
+        font-size: 5rem;
+        font-weight: 700;
+        color: var(--light-purple);
+        opacity: 0.5;
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+
+      .step-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .step-text {
+        color: var(--medium-text);
+        margin-bottom: 1.5rem;
+      }
+
+      .step-image {
+        flex: 1;
+        position: relative;
+      }
+
+      .step-img {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+      }
+
+      /* Testimonials section styles */
+      .testimonials {
+        padding: var(--section-padding);
+        background-color: var(--light-text);
+      }
+
+      .testimonials-container {
+        position: relative;
+        padding: 3rem 0;
+      }
+
+      .testimonial-cards {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding: 1rem 0;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+      }
+
+      .testimonial-cards::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+
+      .testimonial-card {
+        flex: 0 0 350px;
+        scroll-snap-align: start;
+        background-color: var(--light-text);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--box-shadow);
+      }
+
+      .testimonial-quote {
+        font-style: italic;
+        margin-bottom: 1.5rem;
+        color: var(--medium-text);
+      }
+
+      .testimonial-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .testimonial-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .testimonial-info {
+        flex: 1;
+      }
+
+      .testimonial-name {
+        font-weight: 600;
+      }
+
+      .testimonial-location {
+        font-size: 0.9rem;
+        color: var(--gray-text);
+      }
+
+      .testimonial-rating {
+        color: gold;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+      }
+
+      .testimonial-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .testimonial-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--light-text);
+        box-shadow: var(--box-shadow);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .testimonial-btn:hover {
+        background-color: var(--primary-purple);
+        color: var(--light-text);
+      }
+
+      /* CTA section styles */
+      .cta {
+        padding: var(--section-padding);
+        background: linear-gradient(90deg, var(--primary-purple) 0%, var(--light-purple) 100%);
+        color: var(--light-text);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-shape-1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 300px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .cta-shape-2 {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 400px;
+        height: 400px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        transform: translate(30%, 30%);
+      }
+
+      .cta-content {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      .cta-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        animation: heartbeat 1.5s ease-in-out infinite both;
+      }
+
+      .cta-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-text {
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .cta-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      .app-downloads {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .app-download {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Footer styles */
+      .footer {
+        padding: 5rem 1rem 2rem;
+        background-color: #f8f8f8;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .footer-logo {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--primary-purple);
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+
+      .footer-logo span {
+        color: var(--affair-red);
+      }
+
+      .footer-description {
+        color: var(--medium-text);
+        margin-bottom: 1.5rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--light-text);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        background-color: var(--primary-purple);
+        color: var(--light-text);
+        transform: translateY(-3px);
+      }
+
+      .footer-column-title {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .footer-link {
+        color: var(--medium-text);
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: var(--primary-purple);
+      }
+
+      .footer-bottom {
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .copyright {
+        color: var(--medium-text);
+      }
+
+      .footer-bottom-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .footer-bottom-link {
+        color: var(--medium-text);
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-bottom-link:hover {
+        color: var(--primary-purple);
+      }
+
+      /* Responsive styles */
+      @media (max-width: 1024px) {
+        .hero-title {
+          font-size: 3rem;
+        }
+        
+        .section-title {
+          font-size: 2.2rem;
+        }
+        
+        .step {
+          gap: 2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-content {
+          flex-direction: column;
+          text-align: center;
+        }
+        
+        .hero-subtitle {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        .hero-btns {
+          justify-content: center;
+        }
+        
+        .hero-stats {
+          justify-content: center;
+        }
+        
+        .step {
+          flex-direction: column !important;
+          text-align: center;
+          gap: 2rem;
+        }
+        
+        .nav-links, .nav-actions {
+          display: none;
+        }
+        
+        .mobile-menu-btn {
+          display: block;
+        }
+        
+        .footer-bottom {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero-title {
+          font-size: 2.5rem;
+        }
+        
+        .section-title {
+          font-size: 2rem;
+        }
+        
+        .cta-title {
+          font-size: 2rem;
+        }
+        
+        .hero-btns, .cta-buttons {
+          flex-direction: column;
+        }
+        
+        .hero-stats {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .app-downloads {
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <a href="#" class="logo">AFF<span>Air</span></a>
+        
+        <div class="nav-links">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#testimonials" class="nav-link">Testimonials</a>
+          <a href="#" class="nav-link">Pricing</a>
+        </div>
+        
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-secondary">Log In</a>
+          <a href="signup.html" class="btn btn-primary">Sign Up</a>
+        </div>
+        
+        <button class="mobile-menu-btn">☰</button>
+      </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+      <button class="mobile-menu-close">✕</button>
+      <a href="#" class="logo">AFF<span>Air</span></a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#testimonials" class="nav-link">Testimonials</a>
+      <a href="#" class="nav-link">Pricing</a>
+      <a href="signup.html" class="btn btn-secondary">Log In</a>
+      <a href="login.html" class="btn btn-primary">Sign Up</a>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-shape-1"></div>
+      <div class="hero-shape-2"></div>
+      
+      <div class="container hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">Find Your Perfect Match With AFFAir</h1>
+          <p class="hero-subtitle">Join millions of singles finding meaningful connections every day. Your journey to love begins here.</p>
+          
+          <div class="hero-btns">
+            <a href="signup.html" class="btn btn-primary">Get Started</a>
+            <a href="login.html" class="btn btn-secondary">Login</a>
+          </div>
+          
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-number">2M+</div>
+              <div class="hero-stat-text">Active Users</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-number">150K</div>
+              <div class="hero-stat-text">Matches Daily</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-number">95%</div>
+              <div class="hero-stat-text">Success Rate</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hero-image">
+          <img src="1.jpeg" alt="Happy couple using AFFAir" class="hero-img">
+        </div>
+      </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="container">
+        <h2 class="section-title">Why Choose AFFAir?</h2>
+        <p class="section-subtitle">Our platform offers unique features designed to help you find genuine connections based on compatibility and shared interests.</p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">❤️</div>
+            <h3 class="feature-title">Smart Matching</h3>
+            <p class="feature-text">Our advanced algorithm analyzes your preferences, interests, and behavior to suggest the most compatible matches.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3 class="feature-title">Privacy First</h3>
+            <p class="feature-text">Your privacy matters. We employ industry-leading security measures to keep your personal information safe.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3 class="feature-title">Meaningful Conversations</h3>
+            <p class="feature-text">Our conversation starters and interactive chat features help you break the ice and build deeper connections.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🎭</div>
+            <h3 class="feature-title">Video Dating</h3>
+            <p class="feature-text">Get to know your matches better with our secure video dating feature before meeting in person.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Interest-Based Matching</h3>
+            <p class="feature-text">Connect with people who share your passions, hobbies, and interests for more meaningful relationships.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🌎</div>
+            <h3 class="feature-title">Global Community</h3>
+            <p class="feature-text">Meet singles from around the world and expand your dating horizons beyond geographical boundaries.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+      <div class="container">
+        <h2 class="section-title">How AFFAir Works</h2>
+        <p class="section-subtitle">Finding your perfect match is easy with our simple 3-step process designed to create meaningful connections.</p>
+        
+        <div class="steps">
+          <div class="step">
+            <div class="step-content">
+              <div class="step-number">01</div>
+              <h3 class="step-title">Create Your Profile</h3>
+              <p class="step-text">Sign up and build your profile with photos and personal details. The more complete your profile, the better your matches will be.</p>
+              <a href="#" class="btn btn-primary">Create Account</a>
+            </div>
+            
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2864&q=80" alt="Create profile" class="step-img">
+            </div>
+          </div>
+          
+          <div class="step step-reverse">
+            <div class="step-content">
+              <div class="step-number">02</div>
+              <h3 class="step-title">Discover Matches</h3>
+              <p class="step-text">Browse profiles curated just for you based on your preferences and compatibility. Our algorithm gets smarter the more you use it.</p>
+              <a href="#" class="btn btn-primary">Learn More</a>
+            </div>
+            
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2669&q=80" alt="Discover matches" class="step-img">
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-content">
+              <div class="step-number">03</div>
+              <h3 class="step-title">Connect & Meet</h3>
+              <p class="step-text">Start conversations, use video calls, and when you're ready, plan a safe meeting in person. Your journey to love is just beginning!</p>
+              <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+            
+            <div class="step-image">
+              <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2870&q=80" alt="Connect and meet" class="step-img">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+      <div class="container">
+        <h2 class="section-title">Success Stories</h2>
+        <p class="section-subtitle">Thousands of singles have found love on AFFAir. Here are some of their stories.</p>
+        
+        <div class="testimonials-container">
+          <div class="testimonial-cards">
+            <div class="testimonial-card">
+              <p class="testimonial-quote">"I never thought I'd find someone who truly understands me until I joined AFFAir. After just two weeks, I matched with Sarah and we instantly connected. We've been together for a year now!"</p>
+              <div class="testimonial-user">
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2662&q=80" alt="James & Sarah" class="testimonial-avatar">
+                <div class="testimonial-info">
+                  <div class="testimonial-name">James W.</div>
+                  <div class="testimonial-location">New York, USA</div>
+                  <div class="testimonial-rating">★★★★★</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="testimonial-card">
+              <p class="testimonial-quote">"AFFAir's unique approach to matching based on interests brought me and Miguel together. We both love hiking and photography, which gave us the perfect foundation for our relationship."</p>
+              <div class="testimonial-user">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2787&q=80" alt="Sophia & Miguel" class="testimonial-avatar">
+                <div class="testimonial-info">
+                  <div class="testimonial-name">Sophia L.</div>
+                  <div class="testimonial-location">Barcelona, Spain</div>
+                  <div class="testimonial-rating">★★★★★</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="testimonial-card">
+              <p class="testimonial-quote">"After several disappointing experiences with other dating apps, AFFAir was a breath of fresh air. The quality of matches was so much better, and I met my fiancé within a month!"</p>
+              <div class="testimonial-user">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2787&q=80" alt="Robert & Emma" class="testimonial-avatar">
+                <div class="testimonial-info">
+                  <div class="testimonial-name">Robert K.</div>
+                  <div class="testimonial-location">Sydney, Australia</div>
+                  <div class="testimonial-rating">★★★★★</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="testimonial-card">
+              <p class="testimonial-quote">"I appreciated the focus on genuine connections rather than just swiping. The video dating feature was perfect for me as I'm shy in person. Now I'm happily married thanks to AFFAir!"</p>
+              <div class="testimonial-user">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2788&q=80" alt="Mei & David" class="testimonial-avatar">
+                <div class="testimonial-info">
+                  <div class="testimonial-name">Mei L.</div>
+                  <div class="testimonial-location">Toronto, Canada</div>
+                  <div class="testimonial-rating">★★★★★</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial-controls">
+            <button class="testimonial-btn prev-testimonial">←</button>
+            <button class="testimonial-btn next-testimonial">→</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+      <div class="cta-shape-1"></div>
+      <div class="cta-shape-2"></div>
+      
+      <div class="container cta-content">
+        <div class="cta-icon">❤️</div>
+        <h2 class="cta-title">Ready to Find Your Perfect Match?</h2>
+        <p class="cta-text">Join thousands of singles who have already found meaningful connections on AFFAir. Your perfect match could be just a click away.</p>
+        
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-secondary">Create an Account</a>
+          <a href="#" class="btn btn-outline">Learn More</a>
+        </div>
+        
+        <div class="app-downloads">
+          <div class="app-download">
+            <span>📱</span>
+            <span>Download on iOS</span>
+          </div>
+          <div class="app-download">
+            <span>📱</span>
+            <span>Download on Android</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <a href="#" class="footer-logo">AFF<span>Air</span></a>
+            <p class="footer-description">A modern dating platform where meaningful connections happen. Join today and find your perfect match!</p>
+            <div class="social-links">
+              <a href="#" class="social-link">f</a>
+              <a href="#" class="social-link">t</a>
+              <a href="#" class="social-link">in</a>
+              <a href="#" class="social-link">ig</a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3 class="footer-column-title">Company</h3>
+            <div class="footer-links">
+              <a href="#" class="footer-link">About Us</a>
+              <a href="#" class="footer-link">Careers</a>
+              <a href="#" class="footer-link">Press</a>
+              <a href="#" class="footer-link">Blog</a>
+              <a href="#" class="footer-link">Contact</a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3 class="footer-column-title">Resources</h3>
+            <div class="footer-links">
+              <a href="#" class="footer-link">Dating Tips</a>
+              <a href="#" class="footer-link">Safety Guide</a>
+              <a href="#" class="footer-link">Success Stories</a>
+              <a href="#" class="footer-link">FAQ</a>
+              <a href="#" class="footer-link">Help Center</a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3 class="footer-column-title">Legal</h3>
+            <div class="footer-links">
+              <a href="#" class="footer-link">Terms of Service</a>
+              <a href="#" class="footer-link">Privacy Policy</a>
+              <a href="#" class="footer-link">Cookie Policy</a>
+              <a href="#" class="footer-link">Community Guidelines</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <div class="copyright">© 2023 AFFAir. All rights reserved.</div>
+          <div class="footer-bottom-links">
+            <a href="#" class="footer-bottom-link">Privacy</a>
+            <a href="#" class="footer-bottom-link">Terms</a>
+            <a href="#" class="footer-bottom-link">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+    <script>
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('navbar-scrolled');
+        } else {
+          navbar.classList.remove('navbar-scrolled');
+        }
+      });
+      
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const mobileMenuCloseBtn = document.querySelector('.mobile-menu-close');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      const mobileMenuLinks = document.querySelectorAll('.mobile-menu .nav-link');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+      
+      mobileMenuCloseBtn.addEventListener('click', () => {
+        mobileMenu.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+      
+      mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        });
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          if (this.getAttribute('href') !== '#') {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              const navbarHeight = navbar.offsetHeight;
+              const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+              window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+      });
+      
+      // Testimonial slider
+      const testimonialCards = document.querySelector('.testimonial-cards');
+      const prevBtn = document.querySelector('.prev-testimonial');
+      const nextBtn = document.querySelector('.next-testimonial');
+      const cardWidth = 350 + 24; // Card width + gap
+      
+      prevBtn.addEventListener('click', () => {
+        testimonialCards.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+      });
+      
+      nextBtn.addEventListener('click', () => {
+        testimonialCards.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      });
+      
+      // Simple animation on scroll
+      function animateOnScroll() {
+        const elements = document.querySelectorAll('.feature-card, .step, .testimonial-card');
+        
+        elements.forEach(element => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          
+          if (elementPosition < windowHeight - 100) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+          }
+        });
+      }
+      
+      // Set initial styles for animation
+      document.querySelectorAll('.feature-card, .step, .testimonial-card').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      });
+      
+      // Run animation on scroll
+      window.addEventListener('scroll', animateOnScroll);
+      window.addEventListener('load', animateOnScroll);
+    </script>
+  </body>
+</html>

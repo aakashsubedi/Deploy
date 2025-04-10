@@ -1,0 +1,1 @@
+web: gunicorn AFFAIR.wsgi:application 

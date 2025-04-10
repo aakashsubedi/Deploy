@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFFAIR-Explore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .page {
+            display: none;
+        }
+        .active-page {
+            display: block;
+        }
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .nav-item.active {
+            color: #ff5862;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <!-- Explore Page -->
+    <div id="explore" class="page active-page">
+        <div class="bg-white rounded-3xl shadow-lg p-6 w-96 h-[700px]">
+            <div class="flex justify-center items-center mb-4">
+                <h1 class="text-2xl font-semibold text-gray-800">For You</h1>
+            </div>
+            <div class="relative">
+                <img alt="Portrait" class="rounded-2xl w-full h-[500px] object-cover" src="https://storage.googleapis.com/a1aa/image/15eKQj1WLQXvNYGe0qRuWA9se9FhSXTuVz38zy6c0Nw.jpg"/>
+            </div>
+            <div class="mt-4 text-center">
+                <h2 class="text-lg font-semibold text-gray-800">Malena Veronica, 23</h2>
+                <p class="text-sm text-gray-600">Fashion Designer at Victoria's Secret</p>
+            </div>
+            <div class="flex justify-around mt-4">
+                <a href="#" class="bg-white p-4 rounded-full shadow-md hover:bg-gray-200">
+                    <i class="fas fa-times text-2xl text-gray-500"></i>
+                </a>
+                <a href="#" class="bg-white p-4 rounded-full shadow-md hover:bg-gray-200" onclick="showSection('profile')">
+                    <i class="fas fa-user text-2xl text-blue-500"></i>
+                </a>
+                <a href="#" class="bg-white p-4 rounded-full shadow-md hover:bg-gray-200">
+                    <i class="fas fa-heart text-2xl text-red-500"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profile" class="page">
+        <div class="bg-white rounded-lg shadow-lg p-4 max-w-sm w-full mb-16">
+            <div class="relative">
+                <img alt="Profile" class="rounded-lg w-full" src="https://storage.googleapis.com/a1aa/image/-JDM_psr8iL6jtB-CETDuN-BriWrShBby1dnMrMi15w.jpg"/>
+                <div class="absolute top-2 left-2 text-gray-600">
+                    <i class="fas fa-chevron-left cursor-pointer" onclick="showSection('explore')"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="flex items-center">
+                    <h2 class="text-xl font-semibold">Malena Veronica, 23</h2>
+                    <span class="ml-2 text-green-500"><i class="fas fa-circle"></i></span>
+                </div>
+                <p class="text-gray-600">Fashion Designer at Victoria's Secret</p>
+                <p class="text-gray-600">69m away</p>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold">ABOUT ME</h3>
+                <p class="text-gray-600">Hey guys, This is Malena. I'm here to find someone for hookup.</p>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold">INTERESTS</h3>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="bg-red-200 text-red-600 px-3 py-1 rounded-full">Travel</span>
+                    <span class="bg-pink-200 text-pink-600 px-3 py-1 rounded-full">Dance</span>
+                    <span class="bg-green-200 text-green-600 px-3 py-1 rounded-full">Fitness</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Matches Page -->
+    <div id="matches" class="page">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-96 mb-16">
+            <h2 class="text-2xl font-bold mb-4">Matches</h2>
+            <p class="text-gray-600">Your matches will appear here</p>
+        </div>
+    </div>
+
+    <!-- Messages Page -->
+    <div id="messages" class="page">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-96 mb-16">
+            <h2 class="text-2xl font-bold mb-4">Messages</h2>
+            <p class="text-gray-600">Your conversations will appear here</p>
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <nav class="footer-nav">
+        <div class="flex justify-around max-w-2xl mx-auto">
+            <a href="#" class="nav-item active" onclick="showSection('explore')">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Explore</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showSection('matches')">
+                <i class="fas fa-users text-xl"></i>
+                <span class="text-xs mt-1">Matches</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showSection('messages')">
+                <i class="fas fa-comment text-xl"></i>
+                <span class="text-xs mt-1">Messages</span>
+            </a>
+            <a href="profile.html" class="nav-item" onclick="showSection('profile')">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            
+            // Show selected page
+            document.getElementById(sectionId).classList.add('active-page');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

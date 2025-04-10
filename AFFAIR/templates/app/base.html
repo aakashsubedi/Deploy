@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AFFAIR - Find Your Match{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-purple: #9b87f5;
+            --secondary-purple: #7E69AB;
+            --light-purple: #D6BCFA;
+            --affair-pink: #FFDEE2;
+            --affair-peach: #FDE1D3;
+            --affair-red: #ea384c;
+            --dark-text: #333;
+            --light-text: #fff;
+            --medium-text: #666;
+            --gray-text: #888;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+            --section-padding: 5rem 1rem;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .nav-item.active {
+            color: var(--affair-red);
+        }
+        /* Hide footer in chat view */
+        body.chat-view .footer-nav {
+            display: none;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen {% if request.resolver_match.url_name == 'chat' %}chat-view{% endif %}">
+    {% block content %}{% endblock %}
+    
+    {% if user.is_authenticated %}
+    <!-- Navigation Footer -->
+    <nav class="footer-nav">
+        <div class="flex justify-around max-w-md mx-auto">
+            <a href="{% url 'explore' %}" class="nav-item flex flex-col items-center {% if request.resolver_match.url_name == 'explore' %}active{% endif %}">
+                <i class="fas fa-search text-2xl"></i>
+                <span class="text-xs mt-1">Explore</span>
+            </a>
+            <a href="{% url 'matches' %}" class="nav-item flex flex-col items-center {% if request.resolver_match.url_name == 'matches' %}active{% endif %}">
+                <i class="fas fa-heart text-2xl"></i>
+                <span class="text-xs mt-1">Matches</span>
+            </a>
+            <a href="{% url 'conversations' %}" class="nav-item flex flex-col items-center {% if request.resolver_match.url_name == 'conversations' %}active{% endif %}">
+                <i class="fas fa-comment text-2xl"></i>
+                <span class="text-xs mt-1">Messages</span>
+            </a>
+            <a href="{% url 'profile' %}" class="nav-item flex flex-col items-center {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                <i class="fas fa-user text-2xl"></i>
+                <span class="text-xs mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
+    {% endif %}
+
+    {% block javascript %}{% endblock %}
+</body>
+</html> 

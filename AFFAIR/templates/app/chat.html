@@ -1,0 +1,516 @@
+{% extends 'app/base.html' %}
+
+{% block title %}AFFAIR - Chat with {{ other_user.first_name }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col h-screen bg-gray-100">
+    <!-- Chat Header -->
+    <div class="bg-white shadow z-10">
+        <div class="max-w-md mx-auto px-4 py-3">
+            <div class="flex items-center">
+                <a href="{% url 'conversations' %}" class="mr-4 text-gray-600">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="relative">
+                    {% if other_profile.profile_picture %}
+                    <img alt="{{ other_user.first_name }}'s profile picture" class="w-10 h-10 rounded-full object-cover" src="{{ other_profile.profile_picture.url }}"/>
+                    {% else %}
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="ml-3 flex-1">
+                    <h1 class="text-lg font-semibold">
+                        {{ other_user.first_name }} 
+                        {% if other_user.last_name %}
+                            {{ other_user.last_name|first }}.
+                        {% endif %}
+                    </h1>
+                    <p class="text-xs text-gray-500">
+                        {% if other_user.profile.last_active|date:'Y-m-d' == now|date:'Y-m-d' %}
+                            Active today
+                        {% else %}
+                            Last active {{ other_user.profile.last_active|date:"M d" }}
+                        {% endif %}
+                    </p>
+                </div>
+                <button class="p-2 rounded-full hover:bg-gray-100" id="profile-info-btn" aria-label="View Profile">
+                    <i class="fas fa-info-circle text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Messages Area -->
+    <div class="flex-1 overflow-y-auto p-4 pb-20" id="chat-messages">
+        <div class="max-w-md mx-auto space-y-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flex {% if message.sender == user %}justify-end{% endif %}">
+                        <div class="max-w-xs {% if message.sender == user %}bg-purple-600 text-white{% else %}bg-white text-gray-800{% endif %} rounded-xl p-3 shadow">
+                            {% if message.message_type == 'text' %}
+                                <p>{{ message.content }}</p>
+                            {% elif message.message_type == 'image' %}
+                                <div class="mb-2">
+                                    <img src="{{ message.image.url }}" alt="Image" class="max-w-full rounded-lg">
+                                </div>
+                                {% if message.content %}
+                                    <p class="text-sm">{{ message.content }}</p>
+                                {% endif %}
+                            {% elif message.message_type == 'voice' %}
+                                <div class="mb-2">
+                                    <audio controls class="w-full">
+                                        <source src="{{ message.voice.url }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                                {% if message.content %}
+                                    <p class="text-sm">{{ message.content }}</p>
+                                {% endif %}
+                            {% endif %}
+                            <p class="text-xs {% if message.sender == user %}text-purple-200{% else %}text-gray-500{% endif %} text-right mt-1">
+                                {{ message.created_at|time:"g:i A" }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-gray-500 py-8">
+                    <p>No messages yet. Say hello!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Message Input -->
+    <div class="bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-50">
+        <div class="max-w-md mx-auto">
+            <form id="message-form" class="flex flex-col">
+                {% csrf_token %}
+                
+                <!-- Message Attachments Preview -->
+                <div id="attachment-preview" class="hidden mb-2 p-2 border border-gray-200 rounded-lg bg-gray-50">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i id="attachment-icon" class="mr-2"></i>
+                            <span id="attachment-name" class="text-sm truncate"></span>
+                        </div>
+                        <button type="button" id="remove-attachment" class="text-red-500 hover:text-red-700" title="Remove attachment" aria-label="Remove attachment">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Voice Recording UI -->
+                <div id="voice-recording-ui" class="hidden mb-2 p-2 border border-gray-200 rounded-lg bg-red-50 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-microphone text-red-500 mr-2"></i>
+                        <span id="recording-time" class="text-sm">00:00</span>
+                    </div>
+                    <button type="button" id="stop-recording" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-stop-circle"></i> Stop
+                    </button>
+                </div>
+                
+                <div class="flex items-center">
+                    <!-- Attachment buttons -->
+                    <div class="flex mr-2">
+                        <button type="button" id="image-button" class="p-2 text-gray-500 hover:text-purple-500" title="Send Image" aria-label="Send Image">
+                            <i class="fas fa-image"></i>
+                        </button>
+                        <button type="button" id="voice-button" class="p-2 text-gray-500 hover:text-purple-500" title="Send Voice Message" aria-label="Send Voice Message">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <label for="image-input" class="sr-only">Upload Image</label>
+                        <input type="file" id="image-input" accept="image/*" class="hidden" title="Upload Image">
+                    </div>
+                    
+                    <!-- Text input and send button -->
+                    <div class="flex-1 flex items-center">
+                        <input type="text" id="message-input" placeholder="Type a message..." class="w-full border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <button type="submit" id="send-button" class="ml-2 bg-purple-600 text-white rounded-full p-2 hover:bg-purple-700" aria-label="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Profile Info Sidebar (Hidden by default) -->
+    <div id="profile-sidebar" class="fixed inset-y-0 right-0 w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-20">
+        <div class="h-full flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-lg font-semibold">Profile</h2>
+                <button id="close-sidebar" class="text-gray-500 hover:text-gray-700" title="Close profile" aria-label="Close profile">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-4 flex-1">
+                <div class="text-center mb-6">
+                    {% if other_profile.profile_picture %}
+                    <img alt="{{ other_user.first_name }}'s profile picture" class="w-32 h-32 rounded-full object-cover mx-auto" src="{{ other_profile.profile_picture.url }}"/>
+                    {% else %}
+                    <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto">
+                        <i class="fas fa-user text-4xl text-gray-400"></i>
+                    </div>
+                    {% endif %}
+                    <h3 class="text-xl font-semibold mt-3">
+                        {{ other_user.first_name }} {{ other_user.last_name }}
+                        {% if other_profile.age %}, {{ other_profile.age }}{% endif %}
+                    </h3>
+                    <p class="text-gray-600">
+                        {% if other_profile.occupation %}{{ other_profile.occupation }}{% endif %}
+                        {% if other_profile.location and other_profile.occupation %} at {{ other_profile.location }}{% elif other_profile.location %}{{ other_profile.location }}{% endif %}
+                    </p>
+                </div>
+                
+                {% if other_profile.bio %}
+                <div class="mb-6">
+                    <h4 class="text-sm font-semibold uppercase text-gray-500 mb-2">About</h4>
+                    <p class="text-gray-700">{{ other_profile.bio }}</p>
+                </div>
+                {% endif %}
+                
+                {% if other_profile.interests.all %}
+                <div class="mb-6">
+                    <h4 class="text-sm font-semibold uppercase text-gray-500 mb-2">Interests</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {% for interest in other_profile.interests.all %}
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">{{ interest.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const profileInfoBtn = document.getElementById('profile-info-btn');
+        const profileSidebar = document.getElementById('profile-sidebar');
+        const closeSidebar = document.getElementById('close-sidebar');
+        
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Initial scroll to bottom
+        scrollToBottom();
+        
+        // Profile sidebar toggle
+        profileInfoBtn.addEventListener('click', function() {
+            profileSidebar.classList.remove('translate-x-full');
+        });
+        
+        closeSidebar.addEventListener('click', function() {
+            profileSidebar.classList.add('translate-x-full');
+        });
+        
+        // Add message to chat
+        function addMessage(message) {
+            const msgElement = document.createElement('div');
+            msgElement.className = 'flex justify-end';
+            
+            let messageContent = '';
+            
+            if (message.message_type === 'text') {
+                messageContent = `<p>${message.content}</p>`;
+            } else if (message.message_type === 'image') {
+                messageContent = `
+                    <div class="mb-2">
+                        <img src="${message.image_url}" alt="Image" class="max-w-full rounded-lg">
+                    </div>
+                    ${message.content ? `<p class="text-sm">${message.content}</p>` : ''}
+                `;
+            } else if (message.message_type === 'voice') {
+                messageContent = `
+                    <div class="mb-2">
+                        <audio controls class="w-full">
+                            <source src="${message.voice_url}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    ${message.content ? `<p class="text-sm">${message.content}</p>` : ''}
+                `;
+            }
+            
+            msgElement.innerHTML = `
+                <div class="max-w-xs bg-purple-600 text-white rounded-xl p-3 shadow">
+                    ${messageContent}
+                    <p class="text-xs text-purple-200 text-right mt-1">
+                        ${formatTime(new Date(message.created_at))}
+                    </p>
+                </div>
+            `;
+            chatMessages.querySelector('.max-w-md').appendChild(msgElement);
+        }
+        
+        // Format time
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            
+            return `${hours}:${minutes} ${ampm}`;
+        }
+        
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // WebSocket connection
+        const conversationId = '{{ conversation.id }}';
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/' + conversationId + '/'
+        );
+        
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const senderId = parseInt(data.sender_id);
+            const userId = parseInt('{{ user.id }}');
+            
+            // Only process messages from other users
+            if (senderId !== userId) {
+                const msgElement = document.createElement('div');
+                msgElement.className = 'flex';
+                
+                let messageContent = '';
+                
+                if (data.message_type === 'text') {
+                    messageContent = `<p>${data.content}</p>`;
+                } else if (data.message_type === 'image') {
+                    messageContent = `
+                        <div class="mb-2">
+                            <img src="${data.image_url}" alt="Image" class="max-w-full rounded-lg">
+                        </div>
+                        ${data.content ? `<p class="text-sm">${data.content}</p>` : ''}
+                    `;
+                } else if (data.message_type === 'voice') {
+                    messageContent = `
+                        <div class="mb-2">
+                            <audio controls class="w-full">
+                                <source src="${data.voice_url}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        ${data.content ? `<p class="text-sm">${data.content}</p>` : ''}
+                    `;
+                }
+                
+                msgElement.innerHTML = `
+                    <div class="max-w-xs bg-white text-gray-800 rounded-xl p-3 shadow">
+                        ${messageContent}
+                        <p class="text-xs text-gray-500 text-right mt-1">
+                            ${formatTime(new Date(data.created_at))}
+                        </p>
+                    </div>
+                `;
+                
+                chatMessages.querySelector('.max-w-md').appendChild(msgElement);
+                scrollToBottom();
+            }
+        };
+        
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        
+        // Add handlers for image and voice messages
+        const imageButton = document.getElementById('image-button');
+        const voiceButton = document.getElementById('voice-button');
+        const imageInput = document.getElementById('image-input');
+        const attachmentPreview = document.getElementById('attachment-preview');
+        const attachmentIcon = document.getElementById('attachment-icon');
+        const attachmentName = document.getElementById('attachment-name');
+        const removeAttachment = document.getElementById('remove-attachment');
+        const voiceRecordingUI = document.getElementById('voice-recording-ui');
+        const recordingTime = document.getElementById('recording-time');
+        const stopRecording = document.getElementById('stop-recording');
+        
+        let selectedFile = null;
+        let recorder = null;
+        let recordedChunks = [];
+        let recordingInterval = null;
+        let recordingStartTime = null;
+        
+        // Handle image selection
+        imageButton.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                selectedFile = this.files[0];
+                
+                // Show preview
+                attachmentIcon.className = 'fas fa-image text-blue-500 mr-2';
+                attachmentName.textContent = selectedFile.name;
+                attachmentPreview.classList.remove('hidden');
+                voiceRecordingUI.classList.add('hidden');
+            }
+        });
+        
+        // Handle removing attachment
+        removeAttachment.addEventListener('click', function() {
+            selectedFile = null;
+            imageInput.value = '';
+            attachmentPreview.classList.add('hidden');
+        });
+        
+        // Handle voice recording
+        voiceButton.addEventListener('click', async function() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Reset state
+                recordedChunks = [];
+                
+                // Create recorder
+                recorder = new MediaRecorder(stream);
+                
+                recorder.ondataavailable = function(e) {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+                
+                recorder.onstop = function() {
+                    // Create blob from recorded chunks
+                    const audioBlob = new Blob(recordedChunks, { type: 'audio/mpeg' });
+                    
+                    // Create a file from the blob
+                    selectedFile = new File([audioBlob], "voice-message.mp3", { type: 'audio/mpeg' });
+                    
+                    // Show preview
+                    attachmentIcon.className = 'fas fa-microphone text-red-500 mr-2';
+                    attachmentName.textContent = "Voice message (" + formatDuration(Date.now() - recordingStartTime) + ")";
+                    attachmentPreview.classList.remove('hidden');
+                    voiceRecordingUI.classList.add('hidden');
+                    
+                    // Stop the recording timer
+                    clearInterval(recordingInterval);
+                    
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                // Start recording
+                recorder.start();
+                recordingStartTime = Date.now();
+                
+                // Show recording UI
+                voiceRecordingUI.classList.remove('hidden');
+                attachmentPreview.classList.add('hidden');
+                
+                // Update recording time
+                recordingInterval = setInterval(function() {
+                    const elapsed = Date.now() - recordingStartTime;
+                    recordingTime.textContent = formatDuration(elapsed);
+                    
+                    // Automatically stop at 1 minute
+                    if (elapsed > 60000) {
+                        stopRecording.click();
+                    }
+                }, 1000);
+                
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                alert('Could not access your microphone. Please check your permissions.');
+            }
+        });
+        
+        // Stop recording button
+        stopRecording.addEventListener('click', function() {
+            if (recorder && recorder.state === 'recording') {
+                recorder.stop();
+            }
+        });
+        
+        // Format duration for voice messages
+        function formatDuration(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Update send message function to handle attachments
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            let messageType = 'text';
+            let formData = new FormData();
+            
+            // If we have a file attachment
+            if (selectedFile) {
+                if (selectedFile.type.startsWith('image/')) {
+                    messageType = 'image';
+                    formData.append('image', selectedFile);
+                } else if (selectedFile.type === 'audio/mpeg') {
+                    messageType = 'voice';
+                    formData.append('voice', selectedFile);
+                }
+            } else if (!message) {
+                return; // Don't send empty messages
+            }
+            
+            // Add text content and message type
+            formData.append('content', message);
+            formData.append('message_type', messageType);
+            
+            // Clear input
+            messageInput.value = '';
+            imageInput.value = '';
+            selectedFile = null;
+            attachmentPreview.classList.add('hidden');
+            
+            // Send message to server
+            fetch('/messages/{{ conversation.id }}/send/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Add message to chat
+                    addMessage(data.message);
+                    scrollToBottom();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %} 
