@@ -114,6 +114,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Ensure admin static files are collected
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
+# Whitenoise settings
+WHITENOISE_MAX_AGE = 31536000  # 1 year in seconds
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_USE_FINDERS = True
+
 # Media files
 MEDIA_URL = env('MEDIA_URL', default='/media/')
 MEDIA_ROOT = os.path.join(BASE_DIR, env('MEDIA_ROOT', default='mediafiles'))

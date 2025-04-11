@@ -4,8 +4,9 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python AFFAIR/manage.py collectstatic --noinput
-      mkdir -p AFFAIR/mediafiles
+      cd AFFAIR
+      python manage.py collectstatic --noinput --clear
+      mkdir -p mediafiles
     startCommand: cd AFFAIR && python manage.py migrate && gunicorn AFFAIR.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
@@ -41,6 +42,8 @@ services:
         value: "mediafiles"
       - key: MEDIA_URL
         value: "/media/"
+      - key: DISABLE_COLLECTSTATIC
+        value: "0"
     disk:
       name: media
       mountPath: AFFAIR/mediafiles
