@@ -2,8 +2,10 @@ services:
   - type: web
     name: affair-web
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: cd AFFAIR && python manage.py migrate && gunicorn --chdir AFFAIR AFFAIR.wsgi:application
+    buildCommand: |
+      pip install -r requirements.txt
+      python AFFAIR/manage.py collectstatic --noinput
+    startCommand: cd AFFAIR && python manage.py migrate && gunicorn AFFAIR.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -27,7 +29,13 @@ services:
       - key: DEBUG
         value: "False"
       - key: PYTHONPATH
-        value: "AFFAIR"
+        value: "./AFFAIR"
+      - key: PORT
+        value: "8000"
+      - key: STATIC_ROOT
+        value: "staticfiles"
+      - key: STATIC_URL
+        value: "/static/"
 
   - type: redis
     name: affair-redis
