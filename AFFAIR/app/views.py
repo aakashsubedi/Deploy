@@ -391,7 +391,11 @@ def profile(request):
             messages.success(request, 'Profile updated successfully!')
             return redirect('profile')
     else:
-        form = UserProfileForm(instance=user_profile)
+        initial_data = {
+            'first_name': user_profile.user.first_name,
+            'last_name': user_profile.user.last_name
+        }
+        form = UserProfileForm(instance=user_profile, initial=initial_data)
         picture_form = UserPictureForm()
     
     return render(request, 'app/profile.html', {
@@ -413,14 +417,17 @@ def delete_picture(request, picture_id):
 def edit_profile(request):
     try:
         profile = request.user.profile
+        print(f"Profile found: {profile.user.first_name} {profile.user.last_name}")  # Debug line
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user, gender='O')
+        print("Profile created")  # Debug line
     
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         picture_form = UserPictureForm(request.POST, request.FILES)
         
         if form.is_valid():
+            print(f"Form data: {form.cleaned_data}")  # Debug line
             form.save()
             
             if picture_form.is_valid() and request.FILES.getlist('image'):
@@ -435,6 +442,7 @@ def edit_profile(request):
             return redirect('profile')
     else:
         form = UserProfileForm(instance=profile)
+        print(f"Initial form data: {form.initial}")  # Debug line
         picture_form = UserPictureForm()
     
     interests = Interest.objects.all()
