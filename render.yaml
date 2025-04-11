@@ -2,9 +2,8 @@ services:
   - type: web
     name: affair-web
     env: python
-    rootDirectory: AFFAIR
-    buildCommand: pip install -r AFFAIR/requirements.txt
-    startCommand: gunicorn AFFAIR.wsgi:application
+    buildCommand: pip install -r requirements.txt
+    startCommand: python manage.py migrate && gunicorn AFFAIR.wsgi:application
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -23,6 +22,10 @@ services:
           name: affair-redis
           type: redis
           property: connectionString
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DEBUG
+        value: "False"
 
   - type: redis
     name: affair-redis
