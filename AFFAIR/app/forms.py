@@ -36,6 +36,8 @@ class UserProfileForm(forms.ModelForm):
         ('O', 'Other'),
     )
     
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
     birth_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
         required=False
@@ -49,15 +51,33 @@ class UserProfileForm(forms.ModelForm):
     
     class Meta:
         model = UserProfile
-        fields = ('bio', 'birth_date', 'gender', 'location', 'occupation', 'profile_picture', 'interests')
+        fields = ('first_name', 'last_name', 'bio', 'birth_date', 'gender', 'location', 'occupation', 'profile_picture', 'interests')
     
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        if instance:
+            # Get initial values for first_name and last_name from related User
+            initial = kwargs.get('initial', {})
+            initial['first_name'] = instance.user.first_name
+            initial['last_name'] = instance.user.last_name
+            kwargs['initial'] = initial
+        
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field_name != 'interests':
                 field.widget.attrs.update({
                     'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500',
                 })
+    
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        # Save first_name and last_name to User model
+        profile.user.first_name = self.cleaned_data['first_name']
+        profile.user.last_name = self.cleaned_data['last_name']
+        if commit:
+            profile.user.save()
+            profile.save()
+        return profile
 
 class UserPictureForm(forms.Form):
     image = forms.ImageField(

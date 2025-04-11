@@ -373,7 +373,7 @@ def profile(request):
         picture_form = UserPictureForm(request.POST, request.FILES)
         
         if form.is_valid():
-            form.save()
+            form.save()  # This will now save both profile and user name changes
             
             if picture_form.is_valid() and request.FILES.getlist('image'):
                 # Get the highest order number
