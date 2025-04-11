@@ -115,8 +115,8 @@ STATICFILES_DIRS = [
 ]
 
 # Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = env('MEDIA_URL', default='/media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, env('MEDIA_ROOT', default='mediafiles'))
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
