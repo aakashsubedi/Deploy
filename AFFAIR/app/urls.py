@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
+from django.urls import re_path
 
 urlpatterns = [
     # Authentication
@@ -28,7 +30,14 @@ urlpatterns = [
     path('messages/<int:conversation_id>/send/', views.send_message, name='send_message'),
     path('messages/start/<int:user_id>/', views.start_conversation, name='start_conversation'),
     path('api/profile/<int:profile_id>/', views.get_profile_details, name='get_profile_details'),
+    
+    # Media files serving
+    re_path(r'^media/(?P<path>.*)$', serve, {
+        'document_root': settings.MEDIA_ROOT,
+        'show_indexes': True
+    }),
 ]
 
+# Add media serving for development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

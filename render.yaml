@@ -7,6 +7,7 @@ services:
       cd AFFAIR
       python manage.py collectstatic --noinput --clear
       mkdir -p mediafiles
+      chmod -R 755 mediafiles
     startCommand: cd AFFAIR && python manage.py migrate && gunicorn AFFAIR.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
@@ -48,6 +49,13 @@ services:
       name: media
       mountPath: AFFAIR/mediafiles
       sizeGB: 1
+    routes:
+      - type: rewrite
+        source: /media/*
+        destination: /media/$1
+      - type: rewrite
+        source: /static/*
+        destination: /static/$1
 
   - type: redis
     name: affair-redis
