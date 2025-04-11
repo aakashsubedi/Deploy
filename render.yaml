@@ -3,7 +3,7 @@ services:
     name: affair-web
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py migrate && gunicorn AFFAIR.wsgi:application
+    startCommand: cd AFFAIR && python manage.py migrate && gunicorn --chdir AFFAIR AFFAIR.wsgi:application
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -26,6 +26,8 @@ services:
         value: ".onrender.com"
       - key: DEBUG
         value: "False"
+      - key: PYTHONPATH
+        value: "AFFAIR"
 
   - type: redis
     name: affair-redis
