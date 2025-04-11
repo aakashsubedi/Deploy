@@ -2,6 +2,7 @@ services:
   - type: web
     name: affair-web
     env: python
+    rootDirectory: AFFAIR
     buildCommand: pip install -r AFFAIR/requirements.txt
     startCommand: gunicorn AFFAIR.wsgi:application
     envVars:
